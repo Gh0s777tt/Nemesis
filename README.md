@@ -1,9 +1,20 @@
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/KryptonMC/Krypton/build.yml)](https://github.com/KryptonMC/Krypton/actions/workflows/build.yml)
-[![Latest API Version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.kryptonmc.org%2Freleases%2Forg%2Fkryptonmc%2Fkrypton-api%2Fmaven-metadata.xml)](https://repo.kryptonmc.org/#/releases/org/kryptonmc/krypton-api)
-[![Discord](https://img.shields.io/discord/815157416563834881?color=%237289da&label=discord)](https://discord.gg/4QuwYACDRX)
+<a name="top"></a>
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:E50914,100:0B0B0B&height=200&section=header&text=Nemesis&fontSize=84&fontColor=ffffff&fontAlignY=38&desc=From-scratch%20Minecraft%20server%20in%20Kotlin&descAlignY=60&descSize=18&animation=fadeIn" alt="Nemesis"/>
+</p>
 
-# Krypton
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=19&pause=900&color=E50914&center=true&vCenter=true&width=800&lines=A+from-scratch+Minecraft+server+in+Kotlin;Not+based+on+any+Mojang+code;Ghost+Empire+server+core" alt="tagline"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/license-GPL--3.0-E50914?style=for-the-badge&labelColor=0B0B0B" alt="license"/>
+  <img src="https://img.shields.io/badge/Kotlin-E50914?style=for-the-badge&logo=kotlin&logoColor=white&labelColor=0B0B0B" alt="Kotlin"/>
+  <img src="https://img.shields.io/badge/part%20of-GHOST%20EMPIRE-E50914?style=for-the-badge&labelColor=0B0B0B" alt="part of Ghost Empire"/>
+  <img src="https://img.shields.io/badge/type-server-E50914?style=for-the-badge&labelColor=0B0B0B" alt="server"/>
+</p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/Gh0s777tt/Gh0s777tt/main/assets/divider.svg" width="100%" alt=""/></p>
 
 Krypton is free and open-source Minecraft server software, written from scratch, without Mojang code.
 
@@ -130,3 +141,19 @@ helping to make this possible.
 We would also like to say a special thank you to the team at EJ technologies, for being kind enough to
 provide us with an open-source license for [JProfiler](https://www.ej-technologies.com/products/jprofiler/overview.html),
 which allows me to profile the software and continue to make improvements to the performance.
+
+<p align="center"><img src="https://raw.githubusercontent.com/Gh0s777tt/Gh0s777tt/main/assets/divider.svg" width="100%" alt=""/></p>
+
+<div align="center">
+
+### 🩸 Part of the **GHOST EMPIRE** ecosystem
+
+Minecraft infrastructure suite — anticheat, economy, permissions, protection, world tools &amp; chat — alongside [**E-OS**](https://github.com/Gh0s777tt/E-OS) and the Discord &amp; streaming platforms, forged under **Empire Forge**.
+
+<a href="https://discord.gg/Egf88V9UdH"><img src="https://img.shields.io/badge/Discord-Join%20the%20Empire-5865F2?style=for-the-badge&logo=discord&logoColor=white&labelColor=0B0B0B" alt="discord"/></a>
+<a href="mailto:ghostt77@empire-forge.com"><img src="https://img.shields.io/badge/Email-Empire%20Forge-E50914?style=for-the-badge&logo=maildotru&logoColor=white&labelColor=0B0B0B" alt="email"/></a>
+<a href="https://donatr.ee/ghost77/"><img src="https://img.shields.io/badge/%E2%9D%A4%20Support-Donate-E50914?style=for-the-badge&labelColor=0B0B0B" alt="donate"/></a>
+
+<sub><i>Black. Red. Production-grade. — © GHOST EMPIRE · Empire Forge</i></sub>
+
+</div>
