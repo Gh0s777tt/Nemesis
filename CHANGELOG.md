@@ -18,6 +18,8 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 - **Shearing a sheep** — right-clicking a sheep with shears marks it sheared (entity metadata) and drops 1–3 wool of its
   colour. Verified (`mcbot_shear.py`): after the interact the sheep's flags metadata sets the sheared bit (`0x10`) and a
   wool item entity spawns.
+- **Dyeing a sheep** — right-clicking a sheep with any dye recolours its wool to that dye's colour. Verified
+  (`mcbot_dye.py`): dyeing a white sheep with red dye sets its flags-metadata colour bits to RED (`14`).
 
 ---
 

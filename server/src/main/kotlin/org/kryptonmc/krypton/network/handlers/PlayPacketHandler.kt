@@ -69,6 +69,7 @@ import kotlin.math.floor
 import kotlin.math.sqrt
 import org.kryptonmc.krypton.entity.animal.KryptonCow
 import org.kryptonmc.krypton.entity.animal.KryptonSheep
+import org.kryptonmc.api.item.data.DyeColor
 import org.kryptonmc.krypton.inventory.KryptonChestInventory
 import org.kryptonmc.krypton.inventory.KryptonPlayerInventory
 import org.kryptonmc.krypton.item.KryptonItemStack
@@ -1327,6 +1328,22 @@ class PlayPacketHandler(
             ItemDropManager.add(drop)
             ensureContainerTick() // shared tick drives ItemDropManager (pickup + despawn)
             return
+        }
+
+        // Dyeing: right-clicking a sheep with a dye recolours its wool to that dye's colour.
+        if (target is KryptonSheep) {
+            val dyeKey = player.inventory.getHeldItem(Hand.MAIN).type.key().value()
+            if (dyeKey.endsWith("_dye")) {
+                val color = DyeColor.values().firstOrNull { it.name.equals(dyeKey.removeSuffix("_dye"), ignoreCase = true) }
+                if (color != null && target.woolColor != color) {
+                    target.woolColor = color // updates the colour bits of Sheep.FLAGS (metadata index 17) -> broadcast
+                    if (player.gameMode != GameMode.CREATIVE) {
+                        val held = player.inventory.getHeldItem(Hand.MAIN)
+                        player.inventory.setHeldItem(Hand.MAIN, if (held.amount <= 1) KryptonItemStack.EMPTY else held.withAmount(held.amount - 1))
+                    }
+                    return
+                }
+            }
         }
 
         // Animal breeding: feeding an animal its food puts it in "love mode"; two in-love animals nearby breed a baby.
