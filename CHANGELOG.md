@@ -16,6 +16,8 @@ recorded here. Versions are dated `YYYY-MM-DD`.
   plant block in the air directly above it.
 - **Tilling** — right-clicking grass or dirt with a hoe turns it into farmland. Verified (`mcbot_till.py`): a placed
   grass block becomes farmland (block state `9009 → 7854`) on hoe use.
+- **Dirt path** — right-clicking grass or dirt with a shovel turns it into a dirt path. Verified (`mcbot_path.py`): a
+  placed grass block becomes a dirt path (block state `9009 → 7279`) on shovel use.
 
 ---
 

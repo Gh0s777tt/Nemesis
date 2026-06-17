@@ -531,6 +531,15 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Pathing: right-clicking grass or dirt with a shovel turns it into a dirt path.
+        if (player.inventory.mainHand.type.key().value().endsWith("_shovel") &&
+            (existingBlock.eq(KryptonBlocks.GRASS_BLOCK) || existingBlock.eq(KryptonBlocks.DIRT))) {
+            val path = KryptonBlocks.DIRT_PATH.defaultState
+            chunk.setBlock(position, path, false)
+            broadcastBlockUpdate(position, path)
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
         // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
         if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {
