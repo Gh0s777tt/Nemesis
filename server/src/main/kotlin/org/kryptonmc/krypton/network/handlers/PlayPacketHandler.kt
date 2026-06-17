@@ -68,6 +68,7 @@ import net.kyori.adventure.key.Key
 import kotlin.math.floor
 import kotlin.math.sqrt
 import org.kryptonmc.krypton.entity.animal.KryptonCow
+import org.kryptonmc.krypton.entity.animal.KryptonSheep
 import org.kryptonmc.krypton.inventory.KryptonChestInventory
 import org.kryptonmc.krypton.inventory.KryptonPlayerInventory
 import org.kryptonmc.krypton.item.KryptonItemStack
@@ -1312,6 +1313,19 @@ class PlayPacketHandler(
         // Milking: right-clicking a cow with an empty bucket fills it with milk.
         if (target.type.key().value() == "cow" && player.inventory.getHeldItem(Hand.MAIN).type.key().value() == "bucket") {
             player.inventory.setHeldItem(Hand.MAIN, KryptonItemStack(KryptonRegistries.ITEM.get(Key.key("milk_bucket"))))
+            return
+        }
+
+        // Shearing: right-clicking a not-yet-sheared sheep with shears marks it sheared (metadata) and drops its wool.
+        if (target is KryptonSheep && !target.isSheared && player.inventory.getHeldItem(Hand.MAIN).type.key().value() == "shears") {
+            target.isSheared = true // sets the SHEARED flag in Sheep.FLAGS (metadata index 17) -> broadcast to nearby players
+            val woolName = target.woolColor.name.lowercase() + "_wool"
+            val drop = KryptonItemEntity(target.world)
+            drop.position = target.position
+            drop.item = KryptonItemStack(KryptonRegistries.ITEM.get(Key.key(woolName))).withAmount(1 + target.world.random.nextInt(3))
+            target.world.spawnEntity(drop)
+            ItemDropManager.add(drop)
+            ensureContainerTick() // shared tick drives ItemDropManager (pickup + despawn)
             return
         }
 
