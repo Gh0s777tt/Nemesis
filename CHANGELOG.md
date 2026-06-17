@@ -14,6 +14,8 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 - **Bone meal on grass** — right-clicking a grass block with bone meal scatters short grass (and the occasional flower)
   on the air above nearby grass blocks. Verified (`mcbot_bonemealgrass.py`): bone-mealing a placed grass block grows a
   plant block in the air directly above it.
+- **Tilling** — right-clicking grass or dirt with a hoe turns it into farmland. Verified (`mcbot_till.py`): a placed
+  grass block becomes farmland (block state `9009 → 7854`) on hoe use.
 
 ---
 

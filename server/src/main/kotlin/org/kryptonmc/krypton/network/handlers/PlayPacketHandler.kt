@@ -522,6 +522,15 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Tilling: right-clicking grass or dirt with a hoe turns it into farmland.
+        if (player.inventory.mainHand.type.key().value().endsWith("_hoe") &&
+            (existingBlock.eq(KryptonBlocks.GRASS_BLOCK) || existingBlock.eq(KryptonBlocks.DIRT))) {
+            val farmland = KryptonBlocks.FARMLAND.defaultState
+            chunk.setBlock(position, farmland, false)
+            broadcastBlockUpdate(position, farmland)
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
         // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
         if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {
