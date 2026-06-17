@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew :jar:shadowJar --no-daemon --stacktrace
 
       - name: Upload jar artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nemesis-jar
           path: jar/build/libs/*.jar
