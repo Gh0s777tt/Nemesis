@@ -10,6 +10,14 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
+_Nothing yet. New work lands here first, then ships in the next tagged release._
+
+---
+
+## [0.4.0] - 2026-06-17
+
+More block and tool interactions, each implemented and bot-verified against a live server.
+
 ### Added
 - **Flower pot** — right-clicking an empty flower pot with a pottable plant (flower, sapling, fern, …) fills it with
   that plant. Verified (`mcbot_flowerpot.py`): a placed flower pot becomes a potted poppy (block state `8389 → 16386`).
@@ -167,7 +175,8 @@ the build to JDK 21, relicenses the combined work under AGPL-3.0, and implements
 - Repaired two A\* pathfinding integration crashes and a redstone comparator recursion (stack overflow) guard.
 - Doors are now placed **closed** (some default states had `OPEN=true`).
 
-[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Gh0s777tt/Nemesis/releases/tag/v0.1.0
