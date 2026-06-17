@@ -15,6 +15,8 @@ recorded here. Versions are dated `YYYY-MM-DD`.
   (`mcbot_jukebox.py`): a placed jukebox changes state on disc insertion and emits the play-recording world event.
 - **Lectern** — right-clicking an empty lectern with a writable or written book places the book on it (`HAS_BOOK`).
   Verified (`mcbot_lectern.py`): a placed lectern changes state when a writable book is placed on it.
+- **Bell** — right-clicking a bell rings it (plays the bell sound to nearby players). Verified (`mcbot_bell.py`): the
+  bot receives a bell Sound Effect at the bell's position after the interaction.
 
 ---
 

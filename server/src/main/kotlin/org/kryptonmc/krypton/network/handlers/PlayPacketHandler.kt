@@ -484,6 +484,12 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Ringing a bell: right-clicking a bell plays the bell sound to nearby players.
+        if (existingBlock.eq(KryptonBlocks.BELL)) {
+            chunk.world.playSound(position, org.kryptonmc.api.effect.sound.SoundEvents.BELL_BLOCK.get(), net.kyori.adventure.sound.Sound.Source.BLOCK, 2F, 1F, null)
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Right-clicking a (non-iron) door, trapdoor or fence gate opens/closes it by hand.
         if (toggleOpenableByHand(chunk, position, existingBlock)) {
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
