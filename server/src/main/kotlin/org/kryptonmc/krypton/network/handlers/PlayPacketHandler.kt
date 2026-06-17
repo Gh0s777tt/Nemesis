@@ -558,6 +558,21 @@ class PlayPacketHandler(
                 }
             }
         }
+        // Potting: right-clicking an empty flower pot with a pottable plant fills it with that plant's potted block.
+        if (existingBlock.eq(KryptonBlocks.FLOWER_POT)) {
+            val plantKey = player.inventory.mainHand.type.key().value()
+            val potted = KryptonRegistries.BLOCK.get(Key.key("potted_$plantKey"))
+            if (potted !== KryptonBlocks.AIR) {
+                chunk.setBlock(position, potted.defaultState, false)
+                broadcastBlockUpdate(position, potted.defaultState)
+                if (player.gameMode != GameMode.CREATIVE) {
+                    val held = player.inventory.mainHand
+                    player.inventory.setHeldItem(Hand.MAIN, if (held.amount <= 1) KryptonItemStack.EMPTY else held.withAmount(held.amount - 1))
+                }
+                player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+                return
+            }
+        }
         // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
         // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
         if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {

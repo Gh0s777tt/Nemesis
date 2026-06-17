@@ -10,7 +10,9 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Nothing yet. New work lands here first, then ships in the next tagged release._
+### Added
+- **Flower pot** — right-clicking an empty flower pot with a pottable plant (flower, sapling, fern, …) fills it with
+  that plant. Verified (`mcbot_flowerpot.py`): a placed flower pot becomes a potted poppy (block state `8389 → 16386`).
 
 ---
 
