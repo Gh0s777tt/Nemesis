@@ -15,6 +15,8 @@ recorded here. Versions are dated `YYYY-MM-DD`.
   that plant. Verified (`mcbot_flowerpot.py`): a placed flower pot becomes a potted poppy (block state `8389 → 16386`).
 - **Cake** — right-clicking a cake takes a bite (the `BITES` state climbs 0→6) and the final bite eats it away.
   Verified (`mcbot_cake.py`): seven right-clicks step the cake through its bite states (`3321 → 3327`) then remove it.
+- **Repeater delay** — right-clicking a repeater cycles its delay (1→2→3→4→1 ticks). Verified
+  (`mcbot_repeaterdelay.py`): four right-clicks step the repeater through four distinct delay states and wrap back.
 
 ---
 

@@ -675,6 +675,15 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Right-clicking a repeater cycles its delay (1 -> 2 -> 3 -> 4 -> 1 ticks).
+        if (existingBlock.eq(KryptonBlocks.REPEATER) && existingBlock.hasProperty(KryptonProperties.DELAY)) {
+            val delay = existingBlock.requireProperty(KryptonProperties.DELAY)
+            val cycled = existingBlock.setProperty(KryptonProperties.DELAY, if (delay >= 4) 1 else delay + 1)
+            chunk.setBlock(position, cycled, false)
+            broadcastBlockUpdate(position, cycled)
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         if (!player.canBuild) return // If they can't place blocks, they are irrelevant :)
 
         val state = world.getBlock(position)
