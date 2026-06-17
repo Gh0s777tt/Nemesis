@@ -10,6 +10,14 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
+_Nothing yet. New work lands here first, then ships in the next tagged release._
+
+---
+
+## [0.2.0] - 2026-06-17
+
+Gameplay additions, each implemented and bot-verified against a live server.
+
 ### Added
 - **Composter** — right-clicking a composter with a compostable item raises its fill level (0 → 8) and plays the fill
   effect; right-clicking a full composter yields **bone meal** and empties it back to level 0. Verified
@@ -135,5 +143,6 @@ the build to JDK 21, relicenses the combined work under AGPL-3.0, and implements
 - Repaired two A\* pathfinding integration crashes and a redstone comparator recursion (stack overflow) guard.
 - Doors are now placed **closed** (some default states had `OPEN=true`).
 
-[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Gh0s777tt/Nemesis/releases/tag/v0.1.0
