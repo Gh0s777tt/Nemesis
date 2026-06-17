@@ -747,6 +747,14 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Right-clicking a daylight detector flips it between day-sensing and night-sensing (the INVERTED property).
+        if (existingBlock.eq(KryptonBlocks.DAYLIGHT_DETECTOR) && existingBlock.hasProperty(KryptonProperties.INVERTED)) {
+            val inverted = existingBlock.setProperty(KryptonProperties.INVERTED, !existingBlock.requireProperty(KryptonProperties.INVERTED))
+            chunk.setBlock(position, inverted, false)
+            broadcastBlockUpdate(position, inverted)
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         if (!player.canBuild) return // If they can't place blocks, they are irrelevant :)
 
         val state = world.getBlock(position)

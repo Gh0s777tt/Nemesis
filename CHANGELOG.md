@@ -10,7 +10,11 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Nothing yet. New work lands here first, then ships in the next tagged release._
+### Added
+- **Daylight detector toggle** — right-clicking a daylight detector flips its `inverted` blockstate (day-sensing ↔
+  night-sensing) on the same block, completing the redstone right-click family (lever, button, note block, repeater,
+  comparator). Verified (`mcbot_daylight.py`): a placed detector toggles state `5909 → 5910 → 5909` over two
+  right-clicks (on, then back off).
 
 ---
 
