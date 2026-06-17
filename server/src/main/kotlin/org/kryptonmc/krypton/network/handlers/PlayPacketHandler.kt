@@ -621,6 +621,20 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Carving a pumpkin: right-clicking an uncarved pumpkin with shears turns it into a carved pumpkin + drops seeds.
+        if (existingBlock.eq(KryptonBlocks.PUMPKIN) && player.inventory.mainHand.type.key().value() == "shears") {
+            val carved = KryptonBlocks.CARVED_PUMPKIN.defaultState
+            chunk.setBlock(position, carved, false)
+            broadcastBlockUpdate(position, carved)
+            val drop = KryptonItemEntity(player.world)
+            drop.position = player.position.withCoordinates(position.x + 0.5, position.y + 1.0, position.z + 0.5)
+            drop.item = KryptonItemStack(KryptonRegistries.ITEM.get(Key.key("pumpkin_seeds"))).withAmount(4)
+            player.world.spawnEntity(drop)
+            ItemDropManager.add(drop)
+            ensureContainerTick() // shared tick drives ItemDropManager (pickup + despawn)
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
         // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
         if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {

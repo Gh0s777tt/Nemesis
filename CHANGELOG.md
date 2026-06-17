@@ -10,7 +10,9 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Nothing yet. New work lands here first, then ships in the next tagged release._
+### Added
+- **Pumpkin carving** — right-clicking an uncarved pumpkin with shears turns it into a carved pumpkin and drops pumpkin
+  seeds. Verified (`mcbot_pumpkin.py`): a placed pumpkin becomes a carved pumpkin on shear use and drops a seed item.
 
 ---
 
