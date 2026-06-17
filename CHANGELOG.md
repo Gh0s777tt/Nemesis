@@ -10,7 +10,11 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Nothing yet. New work lands here first, then ships in the next tagged release._
+### Added
+- **Composter** — right-clicking a composter with a compostable item raises its fill level (0 → 8) and plays the fill
+  effect; right-clicking a full composter yields **bone meal** and empties it back to level 0. Verified
+  (`mcbot_composter.py`): the block state climbs exactly one level per compost and resets on harvest, with the held item
+  becoming bone meal.
 
 ---
 

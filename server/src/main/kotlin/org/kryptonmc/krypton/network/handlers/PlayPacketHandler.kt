@@ -501,6 +501,31 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
+        // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
+        if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {
+            val level = existingBlock.requireProperty(KryptonProperties.COMPOSTER_LEVEL)
+            if (level >= COMPOSTER_FULL) {
+                val emptied = existingBlock.setProperty(KryptonProperties.COMPOSTER_LEVEL, 0)
+                chunk.setBlock(position, emptied, false)
+                broadcastBlockUpdate(position, emptied)
+                player.inventory.setHeldItem(Hand.MAIN, KryptonItemStack(KryptonRegistries.ITEM.get(Key.key("bone_meal"))))
+                player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+                return
+            }
+            if (player.inventory.mainHand.type.key().value() in COMPOSTABLES) {
+                val filled = existingBlock.setProperty(KryptonProperties.COMPOSTER_LEVEL, level + 1)
+                chunk.setBlock(position, filled, false)
+                broadcastBlockUpdate(position, filled)
+                chunk.world.worldEvent(position, org.kryptonmc.krypton.world.WorldEvents.COMPOSTER_FILL, 0, null)
+                if (player.gameMode != GameMode.CREATIVE) {
+                    val held = player.inventory.mainHand
+                    player.inventory.setHeldItem(Hand.MAIN, if (held.amount <= 1) KryptonItemStack.EMPTY else held.shrink(1))
+                }
+                player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+                return
+            }
+        }
         // Filling a bucket: an empty bucket on water removes the water (source + its connected flow) and yields a water bucket.
         if (player.inventory.mainHand.type.key().value() == "bucket" && existingBlock.eq(KryptonBlocks.WATER)) {
             removeWater(player.world, position)
@@ -1535,6 +1560,15 @@ class PlayPacketHandler(
         private val FISH_LOOT = listOf("cod", "salmon", "pufferfish", "tropical_fish") // a reeled-in catch is rolled from this pool
         private const val PLAYER_INVENTORY_SIZE = 36 // backing item list: 27 main + 9 hotbar (indices 0..35)
         private const val MAX_CROP_AGE = 7 // AGE_7 property max — bone meal jumps a crop straight to this
+        private const val COMPOSTER_FULL = 8 // COMPOSTER_LEVEL max (0..8); a full composter is harvested for bone meal
+        // A representative subset of compostable items (vanilla has ~40); composting one raises a composter's level.
+        private val COMPOSTABLES = setOf(
+            "wheat_seeds", "beetroot_seeds", "melon_seeds", "pumpkin_seeds", "wheat", "carrot", "potato", "apple",
+            "melon_slice", "sugar_cane", "kelp", "dried_kelp", "cactus", "sweet_berries", "oak_sapling", "spruce_sapling",
+            "birch_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling", "oak_leaves", "spruce_leaves",
+            "birch_leaves", "jungle_leaves", "acacia_leaves", "dark_oak_leaves", "grass", "fern", "dandelion", "poppy",
+            "bread", "cookie", "pumpkin", "melon", "mushroom_stem", "nether_wart", "vine", "lily_pad"
+        )
         // Potion "Potion" NBT tag (base name) -> classic mob-effect id. Unknown/plain potions fall back to Speed.
         private val POTION_EFFECTS = mapOf(
             "swiftness" to 1, "slowness" to 2, "strength" to 5, "healing" to 6, "harming" to 7, "leaping" to 8,
