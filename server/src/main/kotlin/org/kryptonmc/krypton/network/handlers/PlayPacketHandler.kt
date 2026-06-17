@@ -583,6 +583,22 @@ class PlayPacketHandler(
                 return
             }
         }
+        // Jukebox: right-clicking an empty jukebox with a music disc loads it (HAS_RECORD) and plays the disc.
+        if (existingBlock.eq(KryptonBlocks.JUKEBOX) && existingBlock.hasProperty(KryptonProperties.HAS_RECORD) &&
+            !existingBlock.requireProperty(KryptonProperties.HAS_RECORD) &&
+            player.inventory.mainHand.type.key().value().startsWith("music_disc_")) {
+            val disc = player.inventory.mainHand.type
+            val loaded = existingBlock.setProperty(KryptonProperties.HAS_RECORD, true)
+            chunk.setBlock(position, loaded, false)
+            broadcastBlockUpdate(position, loaded)
+            chunk.world.worldEvent(position, org.kryptonmc.krypton.world.WorldEvents.PLAY_RECORDING, KryptonRegistries.ITEM.getId(disc), null) // client plays the disc
+            if (player.gameMode != GameMode.CREATIVE) {
+                val held = player.inventory.mainHand
+                player.inventory.setHeldItem(Hand.MAIN, if (held.amount <= 1) KryptonItemStack.EMPTY else held.withAmount(held.amount - 1))
+            }
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
         // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
         if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {
@@ -699,6 +715,7 @@ class PlayPacketHandler(
         // is a no-op for blocks lacking the OPEN property (see KryptonState.setProperty), so this is safe for everything.
         val baseState = KryptonRegistries.BLOCK.get(Key.key(ITEM_BLOCK_OVERRIDES.getOrDefault(itemKey, itemKey))).defaultState
             .setProperty(KryptonProperties.OPEN, false)
+            .setProperty(KryptonProperties.HAS_RECORD, false) // jukeboxes place empty (defaultState has it true)
         val isDoor = keyValue(baseState).endsWith("_door")
         // A door is two blocks tall: force the clicked block to the LOWER half (its defaultState's half is unreliable).
         val newState = if (isDoor) baseState.setProperty(KryptonProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER) else baseState

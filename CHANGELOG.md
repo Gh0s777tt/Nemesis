@@ -10,7 +10,9 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Nothing yet. New work lands here first, then ships in the next tagged release._
+### Added
+- **Jukebox** — right-clicking an empty jukebox with a music disc loads it (`HAS_RECORD`) and plays the disc. Verified
+  (`mcbot_jukebox.py`): a placed jukebox changes state on disc insertion and emits the play-recording world event.
 
 ---
 
