@@ -10,6 +10,14 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
+_Nothing yet. New work lands here first, then ships in the next tagged release._
+
+---
+
+## [0.5.0] - 2026-06-17
+
+Block interactions (jukebox, lectern, bell), each implemented and bot-verified against a live server.
+
 ### Added
 - **Jukebox** — right-clicking an empty jukebox with a music disc loads it (`HAS_RECORD`) and plays the disc. Verified
   (`mcbot_jukebox.py`): a placed jukebox changes state on disc insertion and emits the play-recording world event.
@@ -181,7 +189,8 @@ the build to JDK 21, relicenses the combined work under AGPL-3.0, and implements
 - Repaired two A\* pathfinding integration crashes and a redstone comparator recursion (stack overflow) guard.
 - Doors are now placed **closed** (some default states had `OPEN=true`).
 
-[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.1.0...v0.2.0
