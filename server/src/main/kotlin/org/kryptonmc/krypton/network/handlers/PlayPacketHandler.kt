@@ -503,6 +503,25 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Bone meal on a grass block scatters short grass (and the odd flower) on the air above nearby grass blocks.
+        if (player.inventory.mainHand.type.key().value() == "bone_meal" && existingBlock.eq(KryptonBlocks.GRASS_BLOCK)) {
+            val w = player.world
+            for (dx in -1..1) for (dz in -1..1) {
+                val ground = Vec3i(position.x + dx, position.y, position.z + dz)
+                val above = Vec3i(ground.x, ground.y + 1, ground.z)
+                if (!wBlock(w, ground).eq(KryptonBlocks.GRASS_BLOCK) || !wBlock(w, above).eq(KryptonBlocks.AIR)) continue
+                val plant = when { // centre is always short grass (deterministic); two corners get flowers for variety
+                    dx == 0 && dz == 0 -> KryptonBlocks.GRASS
+                    dx == -1 && dz == -1 -> KryptonBlocks.POPPY
+                    dx == 1 && dz == 1 -> KryptonBlocks.DANDELION
+                    else -> KryptonBlocks.GRASS
+                }.defaultState
+                wSet(w, above, plant)
+                broadcastBlockUpdate(above, plant)
+            }
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
         // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
         if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {

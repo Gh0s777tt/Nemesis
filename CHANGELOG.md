@@ -10,7 +10,10 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Nothing yet. New work lands here first, then ships in the next tagged release._
+### Added
+- **Bone meal on grass** — right-clicking a grass block with bone meal scatters short grass (and the occasional flower)
+  on the air above nearby grass blocks. Verified (`mcbot_bonemealgrass.py`): bone-mealing a placed grass block grows a
+  plant block in the air directly above it.
 
 ---
 
