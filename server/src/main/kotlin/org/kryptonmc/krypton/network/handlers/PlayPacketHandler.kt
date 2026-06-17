@@ -528,6 +528,24 @@ class PlayPacketHandler(
                 return
             }
         }
+        // Cauldron: a water bucket fills an empty cauldron (-> full water cauldron + empty bucket).
+        if (existingBlock.eq(KryptonBlocks.CAULDRON) && player.inventory.mainHand.type.key().value() == "water_bucket") {
+            val filled = KryptonBlocks.WATER_CAULDRON.defaultState.setProperty(KryptonProperties.CAULDRON_LEVEL, 3)
+            chunk.setBlock(position, filled, false)
+            broadcastBlockUpdate(position, filled)
+            player.inventory.setHeldItem(Hand.MAIN, KryptonItemStack(KryptonRegistries.ITEM.get(Key.key("bucket"))))
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
+        // ...and an empty bucket empties a water cauldron (-> empty cauldron + water bucket).
+        if (existingBlock.eq(KryptonBlocks.WATER_CAULDRON) && player.inventory.mainHand.type.key().value() == "bucket") {
+            val emptied = KryptonBlocks.CAULDRON.defaultState
+            chunk.setBlock(position, emptied, false)
+            broadcastBlockUpdate(position, emptied)
+            player.inventory.setHeldItem(Hand.MAIN, KryptonItemStack(KryptonRegistries.ITEM.get(Key.key("water_bucket"))))
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Filling a bucket: an empty bucket on water removes the water (source + its connected flow) and yields a water bucket.
         if (player.inventory.mainHand.type.key().value() == "bucket" && existingBlock.eq(KryptonBlocks.WATER)) {
             removeWater(player.world, position)

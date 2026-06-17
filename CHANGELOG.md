@@ -20,6 +20,9 @@ recorded here. Versions are dated `YYYY-MM-DD`.
   wool item entity spawns.
 - **Dyeing a sheep** — right-clicking a sheep with any dye recolours its wool to that dye's colour. Verified
   (`mcbot_dye.py`): dyeing a white sheep with red dye sets its flags-metadata colour bits to RED (`14`).
+- **Cauldron fill/empty** — right-clicking an empty cauldron with a water bucket fills it (→ water cauldron + empty
+  bucket); right-clicking a water cauldron with an empty bucket empties it (→ empty cauldron + water bucket). Verified
+  (`mcbot_cauldron.py`): the cauldron's block state round-trips empty → full → empty, with the matching bucket swaps.
 
 ---
 
