@@ -558,6 +558,16 @@ class PlayPacketHandler(
                 }
             }
         }
+        // Cake: right-clicking a cake takes a bite (BITES 0..6); the final bite eats it away (block removed).
+        if (existingBlock.eq(KryptonBlocks.CAKE) && existingBlock.hasProperty(KryptonProperties.BITES)) {
+            val bites = existingBlock.requireProperty(KryptonProperties.BITES)
+            val next = if (bites >= CAKE_MAX_BITES) KryptonBlocks.AIR.defaultState
+                       else existingBlock.setProperty(KryptonProperties.BITES, bites + 1)
+            chunk.setBlock(position, next, false)
+            broadcastBlockUpdate(position, next)
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Potting: right-clicking an empty flower pot with a pottable plant fills it with that plant's potted block.
         if (existingBlock.eq(KryptonBlocks.FLOWER_POT)) {
             val plantKey = player.inventory.mainHand.type.key().value()
@@ -1680,6 +1690,7 @@ class PlayPacketHandler(
         private const val PLAYER_INVENTORY_SIZE = 36 // backing item list: 27 main + 9 hotbar (indices 0..35)
         private const val MAX_CROP_AGE = 7 // AGE_7 property max — bone meal jumps a crop straight to this
         private const val COMPOSTER_FULL = 8 // COMPOSTER_LEVEL max (0..8); a full composter is harvested for bone meal
+        private const val CAKE_MAX_BITES = 6 // BITES property max; the next bite at this level eats the cake away
         // A representative subset of compostable items (vanilla has ~40); composting one raises a composter's level.
         private val COMPOSTABLES = setOf(
             "wheat_seeds", "beetroot_seeds", "melon_seeds", "pumpkin_seeds", "wheat", "carrot", "potato", "apple",
