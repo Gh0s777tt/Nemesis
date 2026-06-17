@@ -24,7 +24,10 @@ package org.kryptonmc.krypton.util
  * that are used to downcast a specific API type to its implementation
  * equivalent when implementation-specific information is required.
  */
-inline fun <A, reified I : A> A.downcastApiType(name: String): I {
+// `reified I` is intentionally unbounded: a `reified I : A` bound makes Kotlin 2.4 infer I to the intersection
+// `I & A` at call sites (e.g. KryptonParticleType & ParticleType) and reject reifying it. I is pinned by each
+// caller's declared return type instead, so the `this is I` check stays precise.
+inline fun <A, reified I> A.downcastApiType(name: String): I {
     check(this is I) { "Custom implementations of $name are not supported!" }
     return this
 }

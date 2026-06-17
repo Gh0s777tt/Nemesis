@@ -12,8 +12,8 @@ Nemesis to fork **Krypton** — pisanego od zera serwera Minecraft **1.19.3** (p
 |---|---|
 | JDK | **21** (Temurin; `C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot`) |
 | Gradle | **9.5.1** |
-| Kotlin | **2.2.21** (kompilator **K2**) |
-| KSP | 2.2.21‑2.0.5 |
+| Kotlin | **2.4.0** (kompilator **K2**) |
+| KSP | **2.3.9** (KSP2 — wersjonowanie niezależne od Kotlina) |
 | Shadow | `com.gradleup.shadow` 9.4.2 |
 | Licenser | `dev.yumi.gradle.licenser` 3.0.1 |
 | dokka / detekt / foojay | 1.9.20 / 1.23.8 / 0.8.0 |
@@ -28,7 +28,7 @@ Biblioteki podbite do najnowszych spójnych: configurate 4.2.0, log4j 2.26.0, co
 # w katalogu Krypton-master, JDK 21
 JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot" \
   ./gradlew :jar:shadowJar -x test --no-daemon
-# wynik: jar/build/libs/Krypton.jar (~44 MB), Main-Class org.kryptonmc.krypton.KryptonKt
+# wynik: jar/build/libs/Krypton.jar (~45 MB), Main-Class org.kryptonmc.krypton.KryptonKt
 ```
 
 > Nie przepuszczać backgroundowego gradle przez `tail` — kod wyjścia pipe'a (0) maskuje błędy.

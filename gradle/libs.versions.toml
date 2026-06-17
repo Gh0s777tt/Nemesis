@@ -6,7 +6,7 @@ metadata.format.version = "1.1"
 adventure = "4.26.1"
 configurate = "4.2.0"
 log4j = "2.26.0"
-kotlin = "2.2.21"
+kotlin = "2.4.0"
 coroutines = "1.11.0"
 kotlinCollections = "0.5.0"
 guava = "33.6.0-jre"
@@ -47,7 +47,7 @@ equalsVerifier = "3.14.1"
 jsonassert = "1.5.1"
 
 # Extras
-ksp = "2.2.21-2.0.5"
+ksp = "2.3.9" # KSP2 standalone versioning, decoupled from the Kotlin version
 apache-httpclient = "5.2.1"
 grgit = "5.0.0"
 

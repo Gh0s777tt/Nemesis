@@ -14,6 +14,27 @@ _Nothing yet. New work lands here first, then ships in the next tagged release._
 
 ---
 
+## [0.7.0] - 2026-06-17
+
+Toolchain modernization to **Kotlin 2.4.0** and **KSP2**. The shaded server jar builds on the new toolchain, boots,
+and was bot-verified against a live server (`mcbot_waterlog.py`: login → spawn → place → waterlog all succeeded).
+
+### Changed
+- **Kotlin `2.2.21` → `2.4.0`** and **KSP `2.2.21-2.0.5` → `2.3.9`**. KSP has moved to KSP2, which versions
+  independently of the Kotlin release (the old `<kotlin>-<ksp>` scheme is gone), so the catalog now tracks a
+  standalone KSP version. This supersedes Dependabot PR #12 (which bumped only Kotlin and would have broken KSP
+  resolution on its own).
+- `BookMeta.pages` no longer carries `@get:JvmName("pages")`; its JVM getter is now `getPages()`. Kotlin callers
+  (`meta.pages`) are unaffected. This removes a JVM-signature collision with the `pages()` method `WrittenBookMeta`
+  declares to satisfy Adventure's `Book`, which Kotlin 2.4 now rejects as an accidental override.
+
+### Fixed
+- Kotlin 2.4 source compatibility in the internal `downcastApiType` helper: removed the `reified I : A` upper bound.
+  Kotlin 2.4 inferred `I` to the intersection `I & A` at call sites and refused to reify it. `I` is now pinned by
+  each caller's declared return type, keeping the runtime `this is I` check precise.
+
+---
+
 ## [0.6.0] - 2026-06-17
 
 More interactions (pumpkin carving, waterlogging, pig saddling), each implemented and bot-verified against a live server.
@@ -204,7 +225,8 @@ the build to JDK 21, relicenses the combined work under AGPL-3.0, and implements
 - Repaired two A\* pathfinding integration crashes and a redstone comparator recursion (stack overflow) guard.
 - Doors are now placed **closed** (some default states had `OPEN=true`).
 
-[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.3.0...v0.4.0

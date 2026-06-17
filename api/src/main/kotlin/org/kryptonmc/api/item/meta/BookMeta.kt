@@ -33,7 +33,10 @@ public sealed interface BookMeta<B : BookMeta.Builder<B, I>, I : BookMeta<B, I>>
     /**
      * The pages written in the book.
      */
-    @get:JvmName("pages")
+    // No @get:JvmName("pages"): WrittenBookMeta also implements Adventure's Book (which declares pages()) and
+    // provides that via an explicit fun pages(). Naming this getter pages() too would collide on the JVM
+    // signature pages()Ljava/util/List; (rejected as an accidental override since Kotlin 2.4). The getter is
+    // therefore getPages(); Kotlin callers use .pages unchanged.
     public val pages: @Unmodifiable List<Component>
 
     /**
