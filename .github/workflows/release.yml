@@ -2,7 +2,10 @@ name: Release
 
 # Cut a release by pushing a tag, e.g.:
 #   git tag v0.2.0 && git push origin v0.2.0
-# The shaded server jar is built and attached to the GitHub Release as Nemesis-<version>.jar.
+# The shaded server jar is built and attached to the GitHub Release as Nemesis-<version>.jar,
+# with release notes taken from the matching CHANGELOG.md section.
+# The job is idempotent: if the release already has a jar attached (e.g. it was published
+# manually), it skips — so it never clobbers an existing release.
 
 on:
   push:
@@ -19,28 +22,47 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Skip if release already published
+        id: guard
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json assets \
+               --jq '.assets[].name' 2>/dev/null | grep -q '\.jar$'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Release $GITHUB_REF_NAME already has a jar asset; skipping."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up JDK 21
+        if: steps.guard.outputs.skip != 'true'
         uses: actions/setup-java@v4
         with:
           java-version: "21"
           distribution: temurin
 
       - name: Set up Gradle
+        if: steps.guard.outputs.skip != 'true'
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build shaded server jar
+        if: steps.guard.outputs.skip != 'true'
         run: ./gradlew :jar:shadowJar --no-daemon --stacktrace
 
-      - name: Stage release artifact
+      - name: Stage artifact and notes
+        if: steps.guard.outputs.skip != 'true'
         run: |
           mkdir -p dist
           VERSION="${GITHUB_REF_NAME#v}"
           cp jar/build/libs/*.jar "dist/Nemesis-${VERSION}.jar"
-          ls -la dist
+          awk -v ver="$VERSION" 'BEGIN{p=0} /^## \[/{ if(p) exit; if(index($0,"["ver"]")){p=1; next} } p{print}' CHANGELOG.md > dist/notes.md
+          if [ ! -s dist/notes.md ]; then echo "See CHANGELOG.md for the full list of changes." > dist/notes.md; fi
 
       - name: Publish GitHub Release
+        if: steps.guard.outputs.skip != 'true'
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*.jar
-          generate_release_notes: true
+          body_path: dist/notes.md
           fail_on_unmatched_files: true
