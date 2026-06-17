@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build server jar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: temurin
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build shaded server jar
+        run: ./gradlew :jar:shadowJar --no-daemon --stacktrace
+
+      - name: Upload jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nemesis-jar
+          path: jar/build/libs/*.jar
+          if-no-files-found: error

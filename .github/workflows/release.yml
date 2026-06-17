@@ -1,0 +1,46 @@
+name: Release
+
+# Cut a release by pushing a tag, e.g.:
+#   git tag v0.2.0 && git push origin v0.2.0
+# The shaded server jar is built and attached to the GitHub Release as Nemesis-<version>.jar.
+
+on:
+  push:
+    tags: [ "v*" ]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & publish release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build shaded server jar
+        run: ./gradlew :jar:shadowJar --no-daemon --stacktrace
+
+      - name: Stage release artifact
+        run: |
+          mkdir -p dist
+          VERSION="${GITHUB_REF_NAME#v}"
+          cp jar/build/libs/*.jar "dist/Nemesis-${VERSION}.jar"
+          ls -la dist
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.jar
+          generate_release_notes: true
+          fail_on_unmatched_files: true

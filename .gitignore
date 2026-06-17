@@ -1,0 +1,67 @@
+# IntelliJ IDEA
+.idea/
+/out/
+/*/out
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Visual Studio Code
+.vscode/
+
+# NetBeans
+nbproject/
+nb-configuration.xml
+nbactions.xml
+
+# Gradle
+.gradle/
+build/
+**/bin/
+
+# Temp/heap files
+.*.sw[a-p]
+~*
+.DS_Store
+*.hprof
+
+# Possible test server folders
+server-test/
+test-server/
+/run/
+/krypton/
+/krypton*/
+
+# Generated folders
+logs
+
+# --- Nemesis additions ---
+# Kotlin incremental cache
+.kotlin/
+
+# Log files (server logs, bot run logs, build transcripts)
+*.log
+
+# Runtime world & server data (the world is generated on first run)
+/world/
+usercache.json
+ops.json
+banned-*.json
+whitelist.json
+*.dat
+*.dat_old
+
+# Release / distribution output (build outputs are already covered by build/ above;
+# the Gradle wrapper jar and the vendored gradle/offline-repo/ jars are intentionally tracked)
+/dist/
+/Nemesis-*.jar
+/Krypton.jar
+
+# OS noise
+Thumbs.db
+desktop.ini

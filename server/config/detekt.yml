@@ -1,0 +1,30 @@
+complexity:
+  ComplexCondition:
+    threshold: 6
+  CyclomaticComplexMethod:
+    active: false
+  LabeledExpression:
+    active: false
+  LongMethod:
+    threshold: 100
+  LongParameterList:
+    functionThreshold: 10
+    constructorThreshold: 10
+    ignoreAnnotated: ['javax.annotation.concurrent.Immutable']
+  TooManyFunctions:
+    active: false
+
+naming:
+  FunctionMaxLength:
+    maximumFunctionNameLength: 40
+    excludes: ['**/test/**']
+  InvalidPackageDeclaration:
+    active: false # Doesn't work for the inbound packets with `in` in their package declaration.
+
+style:
+  LoopWithTooManyJumpStatements:
+    active: false
+  MagicNumber:
+    active: false
+  OptionalWhenBraces:
+    active: false

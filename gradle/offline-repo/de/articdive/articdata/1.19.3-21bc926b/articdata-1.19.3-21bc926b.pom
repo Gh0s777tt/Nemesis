@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.articdive</groupId>
+  <artifactId>articdata</artifactId>
+  <version>1.19.3-21bc926b</version>
+  <name>ArticData</name>
+  <description>Collection of data extracted from Minecraft.</description>
+  <url>https://github.com/Articdive/ArticData</url>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>Articdive</id>
+      <name>Articdive</name>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:github.com/Articdive/ArticData.git</connection>
+    <developerConnection>scm:git:ssh://github.com/Articdive/ArticData.git</developerConnection>
+    <url>https://github.com/Articdive/ArticData/tree/1.19.3</url>
+  </scm>
+</project>

@@ -1,0 +1,52 @@
+Nemesis
+Copyright (C) 2026 Gh0s777tt and the Nemesis contributors
+
+================================================================================
+Derivation and attribution
+================================================================================
+
+Nemesis is a derivative work of Krypton:
+
+    Krypton — https://github.com/KryptonMC/Krypton
+    Copyright (C) 2021-2023 KryptonMC and the contributors of the Krypton project
+    Originally licensed under the Apache License, Version 2.0.
+
+The original Apache License 2.0 text is preserved in LICENSE-APACHE. Source
+files derived from Krypton retain their original Apache-2.0 headers and
+copyright notices.
+
+================================================================================
+Licensing of the combined work
+================================================================================
+
+The Nemesis project as a whole — including all modifications and newly added
+files — is licensed under the GNU Affero General Public License, version 3.0
+(see LICENSE).
+
+The Apache License 2.0 is one-way compatible with the GNU AGPL v3.0 (see
+https://www.apache.org/licenses/GPL-compatibility.html and
+https://www.gnu.org/licenses/license-list.html#apache2). The combined work is
+therefore distributed under the AGPL v3.0, while the upstream Apache-2.0
+attribution and notices are retained as required by that license.
+
+================================================================================
+Significant changes relative to upstream Krypton
+================================================================================
+
+  - Revived the dead build: dependencies (formerly served from the now-offline
+    repo.kryptonmc.org) restored to a local Maven repository; toolchain
+    modernized to JDK 21 / Gradle.
+  - Implemented a large set of Minecraft 1.19.3 (protocol 761) gameplay
+    features, each verified by autonomous protocol-level test bots: survival
+    block drops, full inventory interactions, containers (chests / furnaces /
+    hoppers / brewing stands), crafting, XP and levels, mob AI with A*
+    pathfinding, natural spawning, redstone (wire / repeater / comparator /
+    pistons / dispensers), fluid water, crop growth, fishing, TNT, enchanting,
+    potions and status effects, the day-night cycle, sleeping, procedural
+    structures (houses / wells / villages / watchtowers / ruins), block sounds
+    and particles, and world / player / chest / XP persistence.
+
+See CHANGELOG.md for the full, versioned list of changes.
+
+This NOTICE file is provided for attribution purposes in accordance with the
+Apache License 2.0, Section 4(d).

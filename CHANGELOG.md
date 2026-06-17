@@ -1,0 +1,127 @@
+# Changelog
+
+All notable changes to **Nemesis** are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+Every behavioral change listed under **Added** was verified by an autonomous, protocol-level test bot before being
+recorded here. Versions are dated `YYYY-MM-DD`.
+
+## [Unreleased]
+
+_Nothing yet. New work lands here first, then ships in the next tagged release._
+
+---
+
+## [0.1.0] - 2026-06-17
+
+First public release. Nemesis revives the dormant [Krypton](https://github.com/KryptonMC/Krypton) project, modernizes
+the build to JDK 21, relicenses the combined work under AGPL-3.0, and implements a broad slice of vanilla Minecraft
+1.19.3 (protocol 761) gameplay.
+
+### Added
+
+#### Networking & session
+- Handshake, status (server list ping), and offline-mode login with packet compression (Set Compression 256).
+- Full transition into the PLAY state with registry/Join-Game sync, chunk streaming, and keep-alive — stable sessions.
+
+#### Core gameplay
+- Surface spawn and server-validated movement with no rubber-banding.
+- Block breaking, including **survival item-entity drops** (`stone → cobblestone`, etc.) picked up by the drop manager;
+  creative correctly drops nothing.
+- Block placing (now visible to the client via block-update + acknowledgement packets).
+- Chat (with broadcast between players).
+- Complete **inventory interactions**: left-click move, right-click split/deposit, shift quick-move (main ↔ hotbar),
+  double-click collect-by-type, and drag-distribute.
+- Server-side **anti-clip collision**: movement into solid blocks is rejected and the client is resynchronized.
+
+#### Multiplayer
+- Two or more simultaneous players, tab list (PlayerInfo updates), and cross-player chat.
+
+#### Containers & automation
+- Generalized containers — dispensers/droppers (9), chests/barrels (27), and **double chests** (54, via neighbor
+  detection) — with open/transfer/close and contents persisted across restarts (per-chunk block-entity NBT, with a
+  `world/krypton-chests.dat` fallback).
+- **Furnace**: 3-slot smelting on a scheduled tick (ores → ingots, sand → glass, cobblestone → stone), consuming fuel.
+- **Hopper**: auto-transfers one item per tick into the container below.
+- **Brewing stand**: tick-based brewing transformations.
+
+#### Crafting & progression
+- **Crafting table**: live 3×3 grid with shapeless recipes and result consumption on take.
+- **XP & levels**: a new experience packet, orb collection and accumulation, persisted to `world/krypton-xp.dat`.
+- **Eating** restores hunger (and updates the client health/food bar).
+
+#### Mobs, entities & AI
+- **Spawn eggs**, on-tick mob movement, combat (damage → death/despawn), and death drops (XP orbs + real item entities).
+- Item pickup within range, item **dropping** (Q / Ctrl+Q), and drop **despawn** after a timeout.
+- **A\* pathfinding**: hostile mobs chase the nearest player; passive mobs wander; friendly/hostile behavior split.
+- **Natural spawning** around players by time of day, with a population cap.
+- **Entity gravity** with acceleration and **fall damage**.
+- **Dropped-item physics**: thrown/dispensed items fly with velocity and friction; nearby stacks of the same type merge.
+- **Player-vs-player combat**: 4-damage hits with knockback, a death screen, and a full respawn (health/hunger reset,
+  chunks resent).
+
+#### Redstone
+- Power sources (lever, button with auto-reset, pressure plate) and **wire propagation** (BFS, strength 0–15).
+- Receivers: lamps, doors and trapdoors (two-block doors stay in sync), and **pistons** (extend/retract with a head).
+- **Pistons push** (and sticky pistons pull) full block columns, vanilla-style.
+- **Repeaters** (configurable delay, chainable) and **comparators** (container readout, compare/subtract modes, analog
+  output into wire).
+- Powered dispensers/droppers fire their contents.
+- **Cross-chunk** signal propagation across chunk boundaries.
+
+#### World generation
+- **Full procedural terrain** from a multi-octave noise heightmap: rolling hills, **caves** (3D noise), **ore veins**
+  (coal / iron), **trees** (natural per-chunk distribution), and **lakes / water** below sea level.
+- **Four biomes** — plains, desert (sand, no trees), forest (dense oak), and snow (snow layer + spruce) — with
+  biome-appropriate surface, vegetation, and structures.
+- Procedural **structures** injected into generation: houses, wells, watchtowers, desert wells, and ruins.
+- **Villages**: an 8-house ring around a central well, with lamp posts, cardinal/diagonal paths, and wheat farms.
+- The spawn world is itself procedurally generated — no external vanilla world is required.
+
+#### Fluids & farming
+- Flowing **water** from a placed source (BFS spread), with distance-based `LEVEL` (0–15) and full bucket pickup of a
+  connected body.
+- **Crop growth** on tick (`wheat`, `carrots`, `potatoes`), plus **bone meal** for instant maturation.
+
+#### Projectiles, potions & items
+- A reusable **ballistic projectile engine** (the project's first real projectile physics).
+- **Splash potions**: thrown as flying entities that burst on impact (timer or block collision) and apply effects in a
+  radius.
+- **Fishing**: rod cast spawns a bobber; reel catches from a **loot table** (cod / salmon / pufferfish / tropical fish).
+- **TNT**: flint & steel primes a fuse; **primed TNT** flies as an entity and explodes, clearing a spherical area.
+- **Enchanting**: an enchanting table applies NBT enchantments, consuming lapis lazuli.
+- **Drinkable potions** with per-NBT effect mapping (swiftness, leaping, strength, regeneration, poison, …) and timed
+  effect expiry, delivered via two newly added effect packets.
+
+#### Animals
+- **Breeding**: feeding two animals of the same type triggers love mode → a baby + XP orb; babies grow up over time.
+- **Milking**: right-clicking a cow with an empty bucket yields a milk bucket.
+
+#### Atmosphere & persistence
+- **Day-night cycle**: authoritative server time is broadcast to clients on an interval.
+- **Sleeping**: right-clicking a bed skips to dawn, sets the sleeping pose, and sets the player's bed spawnpoint.
+- Block **sounds & particles**: breaking, placing, doors/trapdoors, dispenser fire, pistons, levers, buttons, and a fully
+  mechanical **note block** (note cycling with correct pitch).
+- **Persistence** across forced restarts: world regions, player data (inventory / position / gamemode), chest contents,
+  and XP.
+
+### Changed
+- **Relicensed** the combined work from Apache-2.0 to **AGPL-3.0** (upstream Apache-2.0 attribution retained — see
+  [NOTICE](NOTICE) and [LICENSE-APACHE](LICENSE-APACHE)).
+- Modernized the toolchain to **JDK 21**.
+- Revived the build by restoring dependencies (formerly served from the offline `repo.kryptonmc.org`) to a local Maven
+  repository.
+
+### Fixed
+- New players now spawn at the world spawn with the default gamemode (previously `0,0,0` and always survival).
+- Statistics serialization creates its parent directory for a fresh world (was `NoSuchFileException`).
+- Block placement and player actions now send the 1.19.3-required acknowledgement packets (placement was invisible to
+  the client).
+- Chat enabled by disabling secure-profile enforcement for offline mode.
+- Repaired two A\* pathfinding integration crashes and a redstone comparator recursion (stack overflow) guard.
+- Doors are now placed **closed** (some default states had `OPEN=true`).
+
+[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Gh0s777tt/Nemesis/releases/tag/v0.1.0
