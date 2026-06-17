@@ -10,7 +10,12 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Nothing yet. New work lands here first, then ships in the next tagged release._
+### Added
+- **Void damage** — players below the world (`y < -128`) now take void damage (`4` per ~0.5 s) via the health setter,
+  with death at 0 HP using the normal respawn flow. It is the one damage source that applies even in creative mode
+  (not spectators), matching vanilla. This is the project's first server-side **environmental hazard**, structured to
+  extend to lava/fire/drowning/suffocation next. Verified (`mcbot_void.py`): a bot teleported to `y=-200` dropped
+  `11 → 7 → 3 → 0` in clean −4 ticks.
 
 ---
 

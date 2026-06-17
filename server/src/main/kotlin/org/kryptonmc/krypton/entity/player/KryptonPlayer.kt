@@ -203,6 +203,24 @@ class KryptonPlayer(
         gameModeSystem.tick()
         hungerSystem.tick()
         itemCooldownTracker.tick()
+        tickVoidDamage()
+    }
+
+    private var voidDamageCooldown = 0
+
+    /**
+     * Players below the world take void damage. It is the one source that bypasses creative invulnerability (but not
+     * spectators), matching vanilla. Applied on a short cooldown via the health setter (which pushes Update Health);
+     * death at 0 HP runs the normal respawn flow. First server-side environmental hazard — extendable to lava/fire/drown.
+     */
+    private fun tickVoidDamage() {
+        if (voidDamageCooldown > 0) {
+            voidDamageCooldown--
+            return
+        }
+        if (gameModeSystem.gameMode() == GameMode.SPECTATOR || health <= 0F || position.y >= VOID_DAMAGE_LEVEL) return
+        health = (health - VOID_DAMAGE).coerceAtLeast(0F)
+        voidDamageCooldown = VOID_DAMAGE_INTERVAL_TICKS
     }
 
     @Suppress("UnusedPrivateMember") // We will use the position later.
@@ -414,6 +432,9 @@ class KryptonPlayer(
 
     companion object {
 
+        private const val VOID_DAMAGE_LEVEL = -128.0 // below this Y (well under the world floor) the player is in the void
+        private const val VOID_DAMAGE = 4F            // 4 half-hearts = 2 hearts per void tick
+        private const val VOID_DAMAGE_INTERVAL_TICKS = 10 // deal void damage twice per second
         private const val FLYING_ACHIEVEMENT_MINIMUM_SPEED = 25
         private const val WATER_FLYING_DESTROY_SPEED_FACTOR = 5F
 
