@@ -69,6 +69,7 @@ import kotlin.math.floor
 import kotlin.math.sqrt
 import org.kryptonmc.krypton.entity.animal.KryptonCow
 import org.kryptonmc.krypton.entity.animal.KryptonSheep
+import org.kryptonmc.krypton.entity.animal.KryptonPig
 import org.kryptonmc.api.item.data.DyeColor
 import org.kryptonmc.krypton.inventory.KryptonChestInventory
 import org.kryptonmc.krypton.inventory.KryptonPlayerInventory
@@ -1486,6 +1487,16 @@ class PlayPacketHandler(
         // Milking: right-clicking a cow with an empty bucket fills it with milk.
         if (target.type.key().value() == "cow" && player.inventory.getHeldItem(Hand.MAIN).type.key().value() == "bucket") {
             player.inventory.setHeldItem(Hand.MAIN, KryptonItemStack(KryptonRegistries.ITEM.get(Key.key("milk_bucket"))))
+            return
+        }
+
+        // Saddling: right-clicking a pig with a saddle makes it rideable (sets the saddle metadata).
+        if (target is KryptonPig && !target.isSaddled && player.inventory.getHeldItem(Hand.MAIN).type.key().value() == "saddle") {
+            target.isSaddled = true
+            if (player.gameMode != GameMode.CREATIVE) {
+                val held = player.inventory.getHeldItem(Hand.MAIN)
+                player.inventory.setHeldItem(Hand.MAIN, if (held.amount <= 1) KryptonItemStack.EMPTY else held.withAmount(held.amount - 1))
+            }
             return
         }
 

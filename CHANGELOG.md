@@ -16,6 +16,8 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 - **Waterlogging** — a water bucket on a waterloggable block (slab, stairs, fence, …) fills it with water (`WATERLOGGED`)
   and empties the bucket. Verified (`mcbot_waterlog.py`): an oak slab changes state on water-bucket use and the held item
   becomes an empty bucket. Placement now also forces waterloggable blocks to place dry.
+- **Saddle a pig** — right-clicking a pig with a saddle makes it rideable (saddle metadata). Verified
+  (`mcbot_saddle.py`): after the interact the pig's metadata sets the saddle flag.
 
 ---
 
