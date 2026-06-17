@@ -18,6 +18,9 @@ recorded here. Versions are dated `YYYY-MM-DD`.
   grass block becomes farmland (block state `9009 → 7854`) on hoe use.
 - **Dirt path** — right-clicking grass or dirt with a shovel turns it into a dirt path. Verified (`mcbot_path.py`): a
   placed grass block becomes a dirt path (block state `9009 → 7279`) on shovel use.
+- **Stripping logs** — right-clicking a log, wood, stem or hyphae with an axe converts it to its stripped variant
+  (keeping the axis); works for every wood type. Verified (`mcbot_strip.py`): a placed oak log becomes a stripped oak
+  log (block state `14199 → 21733`) on axe use.
 
 ---
 

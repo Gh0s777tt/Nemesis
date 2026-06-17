@@ -540,6 +540,24 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Stripping: right-clicking a log/wood/stem/hyphae with an axe converts it to its stripped variant (keeping axis).
+        if (player.inventory.mainHand.type.key().value().endsWith("_axe")) {
+            val blockKey = keyValue(existingBlock)
+            val strippable = blockKey.endsWith("_log") || blockKey.endsWith("_wood") || blockKey.endsWith("_stem") || blockKey.endsWith("_hyphae")
+            if (strippable && !blockKey.startsWith("stripped_")) {
+                val stripped = KryptonRegistries.BLOCK.get(Key.key("stripped_$blockKey"))
+                if (stripped !== KryptonBlocks.AIR) {
+                    var strippedState = stripped.defaultState
+                    if (existingBlock.hasProperty(KryptonProperties.AXIS) && strippedState.hasProperty(KryptonProperties.AXIS)) {
+                        strippedState = strippedState.setProperty(KryptonProperties.AXIS, existingBlock.requireProperty(KryptonProperties.AXIS))
+                    }
+                    chunk.setBlock(position, strippedState, false)
+                    broadcastBlockUpdate(position, strippedState)
+                    player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+                    return
+                }
+            }
+        }
         // Composting: right-clicking a composter with a compostable item raises its fill level (0..8) and plays the
         // fill effect; when full (level 8), right-clicking harvests bone meal and empties it back to 0.
         if (existingBlock.eq(KryptonBlocks.COMPOSTER)) {
