@@ -10,6 +10,14 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
+_Nothing yet. New work lands here first, then ships in the next tagged release._
+
+---
+
+## [0.3.0] - 2026-06-17
+
+Tool and farming interactions, each implemented and bot-verified against a live server.
+
 ### Added
 - **Bone meal on grass** — right-clicking a grass block with bone meal scatters short grass (and the occasional flower)
   on the air above nearby grass blocks. Verified (`mcbot_bonemealgrass.py`): bone-mealing a placed grass block grows a
@@ -153,6 +161,7 @@ the build to JDK 21, relicenses the combined work under AGPL-3.0, and implements
 - Repaired two A\* pathfinding integration crashes and a redstone comparator recursion (stack overflow) guard.
 - Doors are now placed **closed** (some default states had `OPEN=true`).
 
-[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Gh0s777tt/Nemesis/releases/tag/v0.1.0
