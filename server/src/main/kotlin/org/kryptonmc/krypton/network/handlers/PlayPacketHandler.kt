@@ -583,6 +583,22 @@ class PlayPacketHandler(
                 return
             }
         }
+        // Lectern: right-clicking an empty lectern with a written/writable book places the book on it.
+        if (existingBlock.eq(KryptonBlocks.LECTERN) && existingBlock.hasProperty(KryptonProperties.HAS_BOOK) &&
+            !existingBlock.requireProperty(KryptonProperties.HAS_BOOK)) {
+            val heldKey = player.inventory.mainHand.type.key().value()
+            if (heldKey == "writable_book" || heldKey == "written_book") {
+                val withBook = existingBlock.setProperty(KryptonProperties.HAS_BOOK, true)
+                chunk.setBlock(position, withBook, false)
+                broadcastBlockUpdate(position, withBook)
+                if (player.gameMode != GameMode.CREATIVE) {
+                    val held = player.inventory.mainHand
+                    player.inventory.setHeldItem(Hand.MAIN, if (held.amount <= 1) KryptonItemStack.EMPTY else held.withAmount(held.amount - 1))
+                }
+                player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+                return
+            }
+        }
         // Jukebox: right-clicking an empty jukebox with a music disc loads it (HAS_RECORD) and plays the disc.
         if (existingBlock.eq(KryptonBlocks.JUKEBOX) && existingBlock.hasProperty(KryptonProperties.HAS_RECORD) &&
             !existingBlock.requireProperty(KryptonProperties.HAS_RECORD) &&
@@ -716,6 +732,7 @@ class PlayPacketHandler(
         val baseState = KryptonRegistries.BLOCK.get(Key.key(ITEM_BLOCK_OVERRIDES.getOrDefault(itemKey, itemKey))).defaultState
             .setProperty(KryptonProperties.OPEN, false)
             .setProperty(KryptonProperties.HAS_RECORD, false) // jukeboxes place empty (defaultState has it true)
+            .setProperty(KryptonProperties.HAS_BOOK, false) // lecterns place empty too
         val isDoor = keyValue(baseState).endsWith("_door")
         // A door is two blocks tall: force the clicked block to the LOWER half (its defaultState's half is unreliable).
         val newState = if (isDoor) baseState.setProperty(KryptonProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER) else baseState
