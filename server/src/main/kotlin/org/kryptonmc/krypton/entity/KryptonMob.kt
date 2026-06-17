@@ -20,17 +20,21 @@ package org.kryptonmc.krypton.entity
 import org.kryptonmc.api.entity.EquipmentSlot
 import org.kryptonmc.api.entity.MainHand
 import org.kryptonmc.api.entity.Mob
+import org.kryptonmc.krypton.coordinate.Positioning
 import org.kryptonmc.krypton.entity.ai.goal.KryptonGoalSelector
 import org.kryptonmc.krypton.entity.ai.pathfinding.KryptonNavigator
 import org.kryptonmc.krypton.entity.attribute.AttributeSupplier
 import org.kryptonmc.krypton.entity.attribute.KryptonAttributeTypes
 import org.kryptonmc.krypton.entity.metadata.MetadataKeys
+import org.kryptonmc.krypton.entity.player.KryptonPlayer
 import org.kryptonmc.krypton.entity.serializer.EntitySerializer
 import org.kryptonmc.krypton.entity.serializer.MobSerializer
 import org.kryptonmc.krypton.entity.util.EquipmentSlots
 import org.kryptonmc.krypton.item.KryptonItemStack
+import org.kryptonmc.krypton.packet.out.play.PacketOutSetEntityVelocity
 import org.kryptonmc.krypton.util.collection.FixedList
 import org.kryptonmc.krypton.world.KryptonWorld
+import kotlin.math.sqrt
 
 @Suppress("LeakingThis")
 abstract class KryptonMob(world: KryptonWorld) : KryptonLivingEntity(world), Mob {
@@ -123,6 +127,7 @@ abstract class KryptonMob(world: KryptonWorld) : KryptonLivingEntity(world), Mob
     }
 
     private var repathCooldown = 0
+    private var attackCooldown = 0
 
     protected open fun aiTick() {
         // Chase AI: pursue the nearest player within follow range. Only HOSTILE mobs give chase — passive
@@ -130,6 +135,7 @@ abstract class KryptonMob(world: KryptonWorld) : KryptonLivingEntity(world), Mob
         // (navigator.tick, run each tick in doAiTick, walks the entity along the path we set here); fall back
         // to direct steering toward the player whenever the pathfinder can't build/keep a path (e.g. open ground).
         if (type.category.isFriendly) return
+        if (attackCooldown > 0) attackCooldown--
         val nearest = world.players.minByOrNull { it.position.distanceSquared(position) }
         if (nearest == null) {
             setTarget(null)
@@ -137,11 +143,20 @@ abstract class KryptonMob(world: KryptonWorld) : KryptonLivingEntity(world), Mob
         }
         val distanceSquared = nearest.position.distanceSquared(position)
         val range = attributes.getValue(KryptonAttributeTypes.FOLLOW_RANGE)
-        if (distanceSquared > range * range || distanceSquared < STOP_DISTANCE_SQUARED) {
-            setTarget(null) // out of range, or close enough — stop pursuing
+        if (distanceSquared > range * range) {
+            setTarget(null) // out of follow range — stop pursuing
             return
         }
         setTarget(nearest)
+        // Within melee reach: bite the player on a cooldown instead of pathing closer. Death/respawn at 0 HP is
+        // handled by the existing flow (the victim's client shows the death screen and requests a respawn).
+        if (distanceSquared <= ATTACK_REACH_SQUARED) {
+            if (attackCooldown == 0 && nearest.health > 0F) {
+                attackTarget(nearest)
+                attackCooldown = ATTACK_COOLDOWN_TICKS
+            }
+            return
+        }
         val targetVec = nearest.position.asVec3d()
         val hasPath = if (repathCooldown > 0) {
             repathCooldown--
@@ -151,6 +166,18 @@ abstract class KryptonMob(world: KryptonWorld) : KryptonLivingEntity(world), Mob
             navigator.tryPathTo(targetVec) // returns true if A* produced a path
         }
         if (!hasPath) navigator.moveTowards(targetVec, attributes.getValue(KryptonAttributeTypes.MOVEMENT_SPEED))
+    }
+
+    /** Deal one melee hit to [target]: reduce its health (the setter pushes Update Health) and knock it back. */
+    private fun attackTarget(target: KryptonPlayer) {
+        target.health = (target.health - MOB_ATTACK_DAMAGE).coerceAtLeast(0F)
+        val dx = target.position.x - position.x
+        val dz = target.position.z - position.z
+        val dist = sqrt(dx * dx + dz * dz)
+        val (vx, vz) = if (dist > 1.0E-4) (dx / dist) * KNOCKBACK_HORIZONTAL to (dz / dist) * KNOCKBACK_HORIZONTAL else 0.0 to 0.0
+        val velocity = PacketOutSetEntityVelocity(target.id, Positioning.encodeVelocity(vx), Positioning.encodeVelocity(KNOCKBACK_VERTICAL), Positioning.encodeVelocity(vz))
+        target.connection.send(velocity)     // the victim's own client applies the knockback
+        target.sendPacketToViewers(velocity)  // everyone else sees them fly back
     }
 
     fun target(): KryptonLivingEntity? = target
@@ -165,7 +192,11 @@ abstract class KryptonMob(world: KryptonWorld) : KryptonLivingEntity(world), Mob
         private const val FLAG_LEFT_HANDED = 1
         private const val FLAG_AGGRESSIVE = 2
 
-        private const val STOP_DISTANCE_SQUARED = 1.0 // stop pursuing once within ~1 block of the target
+        private const val ATTACK_REACH_SQUARED = 2.25 // within ~1.5 blocks the mob bites instead of pathing closer
+        private const val ATTACK_COOLDOWN_TICKS = 20  // ~1 hit per second, like vanilla melee mobs
+        private const val MOB_ATTACK_DAMAGE = 3F      // ~1.5 hearts per hit (zombie-ish on normal difficulty)
+        private const val KNOCKBACK_HORIZONTAL = 0.4  // horizontal shove per hit
+        private const val KNOCKBACK_VERTICAL = 0.36   // slight upward pop (matches PvP knockback)
         private const val REPATH_INTERVAL_TICKS = 10 // rebuild the path toward the target twice per second
 
         private const val DEFAULT_DROP_CHANCE = 0.085F

@@ -10,6 +10,14 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 
 ## [Unreleased]
 
+_Nothing yet. New work lands here first, then ships in the next tagged release._
+
+---
+
+## [0.8.0] - 2026-06-17
+
+Gameplay depth: a redstone toggle, broader bone-meal farming, and **hostile mobs that actually fight back**.
+
 ### Added
 - **Daylight detector toggle** — right-clicking a daylight detector flips its `inverted` blockstate (day-sensing ↔
   night-sensing) on the same block, completing the redstone right-click family (lever, button, note block, repeater,
@@ -20,6 +28,11 @@ recorded here. Versions are dated `YYYY-MM-DD`.
   (e.g. frosted ice) are left untouched. Also added the `beetroot_seeds → beetroots` placement override so beetroot
   can be planted. Verified (`mcbot_bonemeal_beetroot.py`): planted beetroots (state `1532`, age 0) jump to `1535`
   (age 3) on bone meal.
+- **Hostile mobs deal contact damage** — monsters now bite the player when in melee reach (≈1.5 blocks) on a ~1s
+  cooldown for `3` damage, with knockback, instead of chasing harmlessly. Death at 0 HP reuses the existing
+  death/respawn flow. Verified (`mcbot_mobdamage.py`): a zombie spawned beside a stationary bot drove its health
+  `20 → 17 → 14 → … → 0` via Update Health. (Routed through the proven health-setter path, like PvP; a unified
+  `LivingEntity.damage()` pipeline remains future work.)
 
 ---
 
@@ -234,7 +247,8 @@ the build to JDK 21, relicenses the combined work under AGPL-3.0, and implements
 - Repaired two A\* pathfinding integration crashes and a redstone comparator recursion (stack overflow) guard.
 - Doors are now placed **closed** (some default states had `OPEN=true`).
 
-[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/Gh0s777tt/Nemesis/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Gh0s777tt/Nemesis/compare/v0.4.0...v0.5.0
