@@ -3,8 +3,6 @@ name: CodeQL
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
   schedule:
     - cron: "27 3 * * 1"
 
@@ -32,11 +30,15 @@ jobs:
           languages: java-kotlin
           build-mode: manual
 
+      # Disable the Gradle cache and run a clean build so CodeQL's tracer
+      # actually observes compilation (otherwise: "no source code seen").
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-disabled: true
 
-      - name: Build
-        run: ./gradlew :jar:shadowJar --no-daemon
+      - name: Build (clean compile for CodeQL tracing)
+        run: ./gradlew clean :jar:shadowJar --no-daemon
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

@@ -222,3 +222,16 @@ Kluczowe ID pakietów w `server/.../packet/PacketRegistry.kt` (autorytatywne): S
 
 ### Drobiazg (nie ścigany, niska pewność że to realny bug)
 Przy szybkim wielokrotnym łączeniu botów o tej samej nazwie log pokazuje `UUID collision!` — niemal na pewno artefakt testów (offline‑UUID wyliczany z nazwy → ponowne łączenie tej samej nazwy reużywa UUID). Serwer działa mimo tego.
+
+---
+
+## 8. Profesjonalizacja repo i wydanie v0.1.0 (2026-06-17)
+
+Projekt uporządkowany i opublikowany jako profesjonalne repo open‑source **github.com/Gh0s777tt/Nemesis** (publiczne).
+- **Licencja:** całość przelicencjonowana na **AGPL‑3.0** (`LICENSE`); upstreamowy Apache‑2.0 zachowany (`LICENSE-APACHE` + `NOTICE`, atrybucja KryptonMC). Nowe pliki: nagłówek `HEADER-NEMESIS.txt`.
+- **Dokumentacja (zasada: zawsze aktualna z każdą zmianą):** `README.md` przepisane pod Nemesis, `CHANGELOG.md` (Keep a Changelog, v0.1.0, wszystkie funkcje, SemVer), `ROADMAP.md`, `CONTRIBUTING.md` (workflow botów + reguła „docs current"), `SECURITY.md`, szablony Issue/PR.
+- **Reprodukowalny build:** martwe deps (`org.kryptonmc:*`, `ca.spottedleaf:dataconverter`, `de.articdive:articdata`) zwendorowane do `gradle/offline-repo/` i podłączone w `settings.gradle.kts` → build działa na czystym CI bez `repo.kryptonmc.org`. Zweryfikowane buildem z pustym `-Dmaven.repo.local` (BUILD SUCCESSFUL).
+- **CI/CD (GitHub Actions):** `build.yml`, `release.yml` (tag `v*` → build + publikacja jara z notatkami z CHANGELOG, idempotentny), `codeql.yml`, `dependabot.yml`. ⚠️ `gradlew` wymaga bitu +x w indeksie (`git update-index --chmod=+x gradlew`), inaczej CI „Permission denied" (exit 126).
+- **Git:** `git init` w `Krypton-master` → origin Gh0s777tt/Nemesis; czysta historia force‑pushnięta na `master`; stary master zachowany na `legacy/krypton-import`; usunięto 30 starych gałęzi upstreamu. Ochrona `master` (`allow_force_pushes=false`) zdjęta tymczasowo i przywrócona za zgodą usera. Szczegóły w pamięci [[nemesis-github-release-setup]].
+- **Release:** **v0.1.0** opublikowany z runnable `Nemesis-0.1.0.jar` (42.8 MB) → https://github.com/Gh0s777tt/Nemesis/releases/tag/v0.1.0
+- Opis repo / topiki / Discussions ustawione. Dependabot aktywny (PR‑y z bumpami akcji/deps).
