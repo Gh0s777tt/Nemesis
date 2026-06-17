@@ -44,7 +44,7 @@ bytebuddy = "1.14.4"
 jimfs = "1.2"
 reflections = "0.10.2"
 equalsVerifier = "3.14.1"
-jsonassert = "1.5.1"
+jsonassert = "1.5.3"
 
 # Extras
 ksp = "2.2.21-2.0.5"
