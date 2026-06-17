@@ -61,7 +61,7 @@ jobs:
 
       - name: Publish GitHub Release
         if: steps.guard.outputs.skip != 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/*.jar
           body_path: dist/notes.md
