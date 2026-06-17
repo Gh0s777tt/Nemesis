@@ -660,6 +660,16 @@ class PlayPacketHandler(
                 return
             }
         }
+        // Waterlogging: a water bucket on a waterloggable block (slab/stairs/fence/...) fills it with water -> empty bucket.
+        if (player.inventory.mainHand.type.key().value() == "water_bucket" && existingBlock.hasProperty(KryptonProperties.WATERLOGGED) &&
+            !existingBlock.requireProperty(KryptonProperties.WATERLOGGED)) {
+            val logged = existingBlock.setProperty(KryptonProperties.WATERLOGGED, true)
+            chunk.setBlock(position, logged, false)
+            broadcastBlockUpdate(position, logged)
+            player.inventory.setHeldItem(Hand.MAIN, KryptonItemStack(KryptonRegistries.ITEM.get(Key.key("bucket"))))
+            player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+            return
+        }
         // Cauldron: a water bucket fills an empty cauldron (-> full water cauldron + empty bucket).
         if (existingBlock.eq(KryptonBlocks.CAULDRON) && player.inventory.mainHand.type.key().value() == "water_bucket") {
             val filled = KryptonBlocks.WATER_CAULDRON.defaultState.setProperty(KryptonProperties.CAULDRON_LEVEL, 3)
@@ -753,6 +763,7 @@ class PlayPacketHandler(
             .setProperty(KryptonProperties.OPEN, false)
             .setProperty(KryptonProperties.HAS_RECORD, false) // jukeboxes place empty (defaultState has it true)
             .setProperty(KryptonProperties.HAS_BOOK, false) // lecterns place empty too
+            .setProperty(KryptonProperties.WATERLOGGED, false) // waterloggable blocks (slabs/stairs/fences/...) place dry
         val isDoor = keyValue(baseState).endsWith("_door")
         // A door is two blocks tall: force the clicked block to the LOWER half (its defaultState's half is unreliable).
         val newState = if (isDoor) baseState.setProperty(KryptonProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER) else baseState

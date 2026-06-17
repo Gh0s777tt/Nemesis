@@ -13,6 +13,9 @@ recorded here. Versions are dated `YYYY-MM-DD`.
 ### Added
 - **Pumpkin carving** — right-clicking an uncarved pumpkin with shears turns it into a carved pumpkin and drops pumpkin
   seeds. Verified (`mcbot_pumpkin.py`): a placed pumpkin becomes a carved pumpkin on shear use and drops a seed item.
+- **Waterlogging** — a water bucket on a waterloggable block (slab, stairs, fence, …) fills it with water (`WATERLOGGED`)
+  and empties the bucket. Verified (`mcbot_waterlog.py`): an oak slab changes state on water-bucket use and the held item
+  becomes an empty bucket. Placement now also forces waterloggable blocks to place dry.
 
 ---
 
