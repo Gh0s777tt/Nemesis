@@ -15,6 +15,11 @@ recorded here. Versions are dated `YYYY-MM-DD`.
   night-sensing) on the same block, completing the redstone right-click family (lever, button, note block, repeater,
   comparator). Verified (`mcbot_daylight.py`): a placed detector toggles state `5909 → 5910 → 5909` over two
   right-clicks (on, then back off).
+- **Bone meal on the remaining crops** — bone meal now matures beetroot & sweet berry bush (`age` 0..3) and cocoa
+  (0..2), not just the wheat-family (`age` 0..7); restricted by block key so non-crops that share the `age` property
+  (e.g. frosted ice) are left untouched. Also added the `beetroot_seeds → beetroots` placement override so beetroot
+  can be planted. Verified (`mcbot_bonemeal_beetroot.py`): planted beetroots (state `1532`, age 0) jump to `1535`
+  (age 3) on bone meal.
 
 ---
 

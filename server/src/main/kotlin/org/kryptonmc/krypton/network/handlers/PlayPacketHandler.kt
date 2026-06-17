@@ -510,6 +510,24 @@ class PlayPacketHandler(
             player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
             return
         }
+        // Bone meal also matures the crops that don't use the 0..7 scale: beetroot & sweet berry bush (age 0..3),
+        // cocoa (0..2). Restricted by block key so non-crops that share the "age" property (e.g. frosted ice) are left alone.
+        if (player.inventory.mainHand.type.key().value() == "bone_meal") {
+            val cropKey = keyValue(existingBlock)
+            val matured = when {
+                (cropKey == "beetroots" || cropKey == "sweet_berry_bush") && existingBlock.hasProperty(KryptonProperties.AGE_3) ->
+                    existingBlock.setProperty(KryptonProperties.AGE_3, 3)
+                cropKey == "cocoa" && existingBlock.hasProperty(KryptonProperties.AGE_2) ->
+                    existingBlock.setProperty(KryptonProperties.AGE_2, 2)
+                else -> null
+            }
+            if (matured != null) {
+                chunk.setBlock(position, matured, false)
+                broadcastBlockUpdate(position, matured)
+                player.connection.send(PacketOutAcknowledgeBlockChange(packet.sequence))
+                return
+            }
+        }
         // Bone meal on a grass block scatters short grass (and the odd flower) on the air above nearby grass blocks.
         if (player.inventory.mainHand.type.key().value() == "bone_meal" && existingBlock.eq(KryptonBlocks.GRASS_BLOCK)) {
             val w = player.world
@@ -1766,7 +1784,8 @@ class PlayPacketHandler(
         // Items whose placed block has a different key than the item (extend as needed).
         private val ITEM_BLOCK_OVERRIDES = mapOf(
             "redstone" to "redstone_wire", "water_bucket" to "water",
-            "wheat_seeds" to "wheat", "carrot" to "carrots", "potato" to "potatoes" // crop items place their growing crop block
+            "wheat_seeds" to "wheat", "carrot" to "carrots", "potato" to "potatoes", // crop items place their growing crop block
+            "beetroot_seeds" to "beetroots" // beetroot seeds plant the beetroots crop (matured by bone meal, like the others)
         )
         private const val WATER_FLOW_RANGE = 6       // how many blocks placed water flows horizontally over ground
         private const val WATER_FLOW_MAX_BLOCKS = 400 // safety cap on a single flow's spread (prevents runaway floods)
