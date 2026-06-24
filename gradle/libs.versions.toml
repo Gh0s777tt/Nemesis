@@ -37,7 +37,7 @@ jctools = "4.0.6"
 hydrazine = "1.8.1"
 
 # Test
-junit-jupiter = "5.9.2"
+junit-jupiter = "6.1.0"
 junit-platform = "1.9.2"
 mockk = "1.13.4"
 bytebuddy = "1.14.4"
