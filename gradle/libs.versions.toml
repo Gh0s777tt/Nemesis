@@ -53,7 +53,7 @@ grgit = "5.0.0"
 
 # Plugin versions
 licenser = "3.0.1"
-dokka = "1.9.20"
+dokka = "2.2.0"
 detekt = "1.23.8"
 vanillaGradle = "0.2.1-SNAPSHOT"
 shadow = "9.4.2"
