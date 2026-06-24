@@ -39,7 +39,7 @@ hydrazine = "1.8.1"
 # Test
 junit-jupiter = "5.9.2"
 junit-platform = "1.9.2"
-mockk = "1.13.4"
+mockk = "1.14.11"
 bytebuddy = "1.14.4"
 jimfs = "1.2"
 reflections = "0.10.2"
